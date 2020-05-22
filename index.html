@@ -1,9 +1,17 @@
 <html>
     <style> html{width: 100%;height:100%;}</style>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    
     <body style="margin:0px">
         <iframe id="ifr" style="width: 100%;height:100%" src="https://m.bboom.naver.com/board/list.nhn">
-        <script>alert("hello");</script>
+        
         </iframe>
     </body>
+    <script>
+            $('#ifr').on("load", function() {
+                    ;
+                    alert($(this.contentDocument).find('body').length);
+});
+
+    </script>
 </html>
