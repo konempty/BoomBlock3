@@ -22,6 +22,21 @@
                 data=data.replaceAll(rep[i],'https://m.bboom.naver.com'+rep[i]);
             }
             $("#temp").html(data);
+            $(function(){
+var addBtns=function(){
+$('.blockbtn').remove();
+$('.sc_usr').each(function(){
+var userno = $(this).children('a').attr('href').split('=')[1];
+var usernm = $(this).children('a').text().trim();
+$(this).append('<input class=\"blockbtn\" type=\"button\" value=\"차단\"/>');
+});};
+oPostList.getMorePostList = oPostList.__getMoreList;
+oPostList.__getMoreList = function(a,b){
+oPostList.getMorePostList(a,b);
+addBtns();
+};
+addBtns();
+});
         });
     </script>
 </html>
