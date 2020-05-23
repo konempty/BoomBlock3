@@ -15,7 +15,7 @@
                   
             url:"https://m.bboom.naver.com/board/list.nhn",
         }).done(function(data){
-            var rep=['/js2','/css/','/board/'];
+            var rep=['/js2','/css','/board'];
             for(i=0;i<rep.length;i++){
                 data=data.replace(rep[i],'https://m.bboom.naver.com'+rep[i]);
             }
