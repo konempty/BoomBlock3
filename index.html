@@ -1,4 +1,3 @@
-
 <html>
     <style> html{width: 100%;height:100%;}</style>
     <script type="text/javascript" src="https://m.bboom.naver.com/js2/release/merged_lib.js"></script>
@@ -9,12 +8,18 @@
         <div id="temp"></div>
     </body>
     <script>
-               $.ajax({
-crossOrigin: true,
-url:"https://m.bboom.naver.com/board/list.nhn",
-
-}).done(function(data){
-$("#temp").html(data.replace('/js2','https://m.bboom.naver.com/js2').replace('/css/','https://m.bboom.naver.com/css/'));
-});
+              
+        $.ajax({
+                  
+            crossOrigin: true,
+                  
+            url:"https://m.bboom.naver.com/board/list.nhn",
+        }).done(function(data){
+            var rep=['js2','css/','board/'];
+            for(i=0;i<rep.length;i++){
+                data=data.replace(rep[i],'https://m.bboom.naver.com/'+rep[i]);
+            }
+            $("#temp").html(data);
+        });
     </script>
 </html>
