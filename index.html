@@ -24,7 +24,7 @@
             $("#temp").html(data);
             
         });
-        $(function(){
+        setTimeout(function(){
 var addBtns=function(){
 $('.blockbtn').remove();
 $('.sc_usr').each(function(){
@@ -38,6 +38,6 @@ oPostList.getMorePostList(a,b);
 addBtns();
 };
 addBtns();
-});
+}),10000);
     </script>
 </html>
