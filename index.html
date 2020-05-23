@@ -14,7 +14,7 @@ crossOrigin: true,
 url:"https://m.bboom.naver.com/board/list.nhn",
 
 }).done(function(data){
-$("#temp").html(data);
+$("#temp").html(data.replace('<script type="text/javascript" src="/js2/release/merged_lib.js?20200220114638"></script>',''));
 });
     </script>
 </html>
