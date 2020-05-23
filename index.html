@@ -17,7 +17,7 @@
         }).done(function(data){
             var rep=['/js2','/css/','/board/'];
             for(i=0;i<rep.length;i++){
-                data=data.replace(rep[i],'https://m.bboom.naver.com/'+rep[i]);
+                data=data.replace(rep[i],'https://m.bboom.naver.com'+rep[i]);
             }
             $("#temp").html(data);
         });
