@@ -23,6 +23,33 @@
             }
             $("#temp").html(data);
             
+oPostList.__getMoreList =function() {
+        var a = this;
+        $.ajax({
+            crossOrigin: true,
+            type: "POST",
+            url: this.__htUserOption.sISRequestURL,
+            data: this.__params,
+            context: a,
+            success: function(b) {
+                if (b.trim().length > 0)
+                    try {
+                        a.__$content.append(b),
+                        this.__visible.refresh()
+                    } catch (c) {
+                        console.log(c)
+                    } finally {
+                        this.__initSocialPlugin(),
+                        lcs_do()
+                    }
+                $("._load_timing_next").hide()
+            },
+            error: function(a) {
+                console.log("err = " + a)
+            }
+        
+    }
+});
         });
     </script>
 </html>
