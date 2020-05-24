@@ -42,14 +42,14 @@
     }
     $.ajax({
         //crossOrigin: true,
-        url: "https://cors-anywhere.herokuapp.com/https://m.bboom.naver.com/board/list.nhn",
+        url: "https://cors-anywhere.herokuapp.com/https://m.bboom.naver.com/best/list.nhn",
     }).done(function(data) {
-        var rep = ['/js2', '/board'];
+        var rep = ['/js2', '/best'];
         for (i = 0; i < rep.length; i++) {
             data = data.replaceAll(rep[i], 'https://m.bboom.naver.com' + rep[i]);
         }
-        data = data.replace('<a href="/best/list.nhn"','<a href="/BoomBlock3/best/"');
-        data = data.replace('<a href="https://m.bboom.naver.com/board/list.nhn"','<a href="/BoomBlock3/board/"')
+        data = data.replace('<a href="/board/list.nhn"','<a href="/BoomBlock3/board/"');
+        data = data.replace('<a href="https://m.bboom.naver.com/best/list.nhn"','<a href="/BoomBlock3/best/"');
         data = data.replaceAll('"/css', '"https://m.bboom.naver.com/css');
         $("#temp").html(data);
         oPostList.__getMoreList = function() {
