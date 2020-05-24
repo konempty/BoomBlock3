@@ -13,8 +13,7 @@
               }
         $.ajax({
                   
-            dataType : "jsonp",
-    jsonpCallback:"callbackData",
+             crossOrigin: true,
                   
             url:"https://m.bboom.naver.com/board/list.nhn",
         }).done(function(data){
