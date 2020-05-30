@@ -69,8 +69,7 @@
         return sval;
     }
     $.ajax({
-        //crossOrigin: true,
-        url: "https://cors-anywhere.herokuapp.com/https://m.bboom.naver.com/best/list.nhn",
+        url: "https://cors-anywhere.herokuapp.com/https://m.bboom.naver.com/board/get.nhn?boardNo=" + getParam("boardNo") + "&postNo=" + getParam("postNo") + "&entrance=",
     }).done(function(data) {
         var rep = ['/js2', '/best'];
         for (i = 0; i < rep.length; i++) {
@@ -79,69 +78,37 @@
         data = data.replace('<a href="/board/list.nhn"', '<a href="/BoomBlock3/board/"');
         data = data.replaceAll('<a href="https://m.bboom.naver.com/best/list.nhn', '<a href="/BoomBlock3/best/');
         data = data.replaceAll('"/css', '"https://m.bboom.naver.com/css');
+        data = data.replaceAll('/board/get.nhn', '/BoomBlock3/get/');
+        data = data.replaceAll('https://cors-anywhere.herokuapp.com/https://m.bboom.naver.com/hitCount','/hitCount');
         $("#temp").html(data);
-        if (getParam("likeBandNo") == '2') {
-            $("a[href='/BoomBlock3/best/']").parent().removeClass('on');
-            $("a[href='/BoomBlock3/best/?likeBandNo=2']").parent().addClass('on');
-        }
-        oPostList.__getMoreList = function() {
-            var a = this;
-            $.ajax({
-                //crossOrigin: true,
+        oPostView.__requestCommentList = function(isBest) {
+            var param = {
+                boardNo: Number(this.__htUserOption.nBoardNo),
+                postNo: Number(this.__htUserOption.nPostNo),
+                isBest: isBest,
+                limitFrom: this.__commentLimitFrom,
+                limit: this.__commentLimitFrom <= 0 ? this.__initialLimit : this.__commentLimit,
+                isCommentPage: this.__htUserOption.isCommentPage ? !0 : !1
+            };
+            $.ajax("https://cors-anywhere.herokuapp.com/https://m.bboom.naver.com/comment/list.json", {
                 type: "POST",
-                url: 'https://cors-anywhere.herokuapp.com/' + this.__htUserOption.sISRequestURL.replace("likeBandNo=&", "") + '&length=30&likeBandNo=' + getParam("likeBandNo"),
-                data: this.__params,
-                context: a,
-                success: function(b) {
-                    b = b.replaceAll('/im/pf_default.png', 'https://m.bboom.naver.com/im/pf_default.png');
-                    b = b.replaceAll('/best/get.nhn', '/BoomBlock3/get/');
-                    if (b.trim().length > 0)
-                        try {
-                            a.__$content.append(b),
-                                this.__visible.refresh()
-                            addBtns();
-                        } catch (c) {
-                            console.log(c)
-                        } finally {
-                            this.__initSocialPlugin(),
-                                lcs_do()
-                        }
-                    $("._load_timing_next").hide()
-                },
-                error: function(a) {
-                    console.log("err = " + a)
-                }
-            });
-        }
-        oPostList.__postLike = function(a) {
-            
-            $("input[name=boardNo]").val(a.attr("data-board-no"));
-            $("input[name=postNo]").val(a.attr("data-post-no"));
-            document.fileSend.submit();
-            //$("#ifr").prop('src','https://m.bboom.naver.com/post/like.json');
-            /*
-            var b = this,
-                c = a.attr("data-click-code"),
-                d = {
-                    boardNo: a.attr("data-board-no"),
-                    postNo: a.attr("data-post-no")
-                };
-            $.ajax({
-                crossOrigin: true,
-                type: "POST",
-                url: "https://m.bboom.naver.com/post/like.json",
                 dataType: "json",
-                data: d,
-                success: function(d) {
-                    console.log(d);
+                data: param,
+                context: this,
+                timeoutout: 3e3,
+                success: function(jsonObject) {
+                    var jsonResult = eval(jsonObject),
+                        sCode = jsonResult.code;
+                    oCC.checkSuccess(sCode) ? isBest ? this.__callbackBestCommentList(jsonResult.result, jsonResult.message) : this.__callbackCommentList(jsonResult.result, jsonResult.message) : oCC.checkRedirect(sCode) ? location.href = jsonResult.result : alert(jsonResult.message)
+                    
+                    //b = b.replaceAll('/im/pf_default.png', 'https://m.bboom.naver.com/im/pf_default.png');
+                    $("img[src='/im/pf_default.png']").attr('src','https://m.bboom.naver.com/im/pf_default.png');
                 },
-                error: function(a) {
-                    console.log("err = " + a),
-                        nclk(this, c, "", "")
-                }
-            })*/
-        }
-        oPostList.__getMoreList();
+                error: function(a) {}
+            })
+        };
+        oPostView.__requestCommentList(true);
+        //oPostView.__requestCommentList(false);
     });
 
     function addUser(no, nm) {

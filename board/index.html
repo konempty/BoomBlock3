@@ -23,6 +23,14 @@
 
 <body style="margin:0px">
     <div id="temp"></div>
+    <form name="fileSend" action="https://m.bboom.naver.com/post/like.json" method="POST" target="ifr">
+
+        <input type="hidden" name="boardNo" value="" />
+        <input type="hidden" name="postNo" value="" />
+    </form>
+    <iframe id="ifr" style="visibility: hidden;" name="ifr">
+
+    </iframe>
 </body>
 <script>
     var addBtns = function() {
@@ -62,6 +70,7 @@
                 context: a,
                 success: function(b) {
                     b = b.replaceAll('/im/pf_default.png', 'https://m.bboom.naver.com/im/pf_default.png');
+                    b = b.replaceAll('/board/get.nhn', '/BoomBlock3/get/');
                     if (b.trim().length > 0)
                         try {
                             a.__$content.append(b),
@@ -80,6 +89,34 @@
                 }
             });
         }
+        oPostList.__postLike = function(a) {
+            
+            $("input[name=boardNo]").val(a.attr("data-board-no"));
+            $("input[name=postNo]").val(a.attr("data-post-no"));
+            document.fileSend.submit();
+            //$("#ifr").prop('src','https://m.bboom.naver.com/post/like.json');
+            /*
+            var b = this,
+                c = a.attr("data-click-code"),
+                d = {
+                    boardNo: a.attr("data-board-no"),
+                    postNo: a.attr("data-post-no")
+                };
+            $.ajax({
+                crossOrigin: true,
+                type: "POST",
+                url: "https://m.bboom.naver.com/post/like.json",
+                dataType: "json",
+                data: d,
+                success: function(d) {
+                    console.log(d);
+                },
+                error: function(a) {
+                    console.log("err = " + a),
+                        nclk(this, c, "", "")
+                }
+            })*/
+        }
         oPostList.__getMoreList();
     });
 
@@ -87,6 +124,8 @@
         localStorage.setItem(no, nm);
         $('a[href$=\"/profile/home.nhn?userNo='+no+'\"]').parent().parent().parent().parent().remove();
     }
+    
+    
 </script>
 
 </html>
