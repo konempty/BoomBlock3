@@ -65,32 +65,38 @@
         String.prototype.replaceAll = function (org, dest) {
             return this.split(org).join(dest);
         };
+        function getParam(sname) {
+            var params = location.search.substr(location.search.indexOf('?') + 1);
+            var sval = '';
+            params = params.split('&');
+            for (var i = 0; i < params.length; i++) {
+                temp = params[i].split('=');
+                if ([temp[0]] == sname) {
+                    sval = temp[1];
+                }
+            }
+            return sval;
+        }
         $.ajax({
             //crossOrigin: true,
-            url: 'https://cors-anywhere.herokuapp.com/https://m.bboom.naver.com/board/list.nhn',
+            url:
+                'https://cors-anywhere.herokuapp.com/https://m.bboom.naver.com/search/search.nhn?filter=0&query=' +
+                getParam('query'),
         }).done(function (data) {
-            var rep = ['/js2', '/board'];
+            var rep = ['/js2', '/search'];
             for (i = 0; i < rep.length; i++) {
                 data = data.replaceAll(rep[i], 'https://m.bboom.naver.com' + rep[i]);
             }
-            data = data.replace('<a href="/best/list.nhn"', '<a href="/BoomBlock3/best/"');
-            data = data.replace(
-                '<a href="https://m.bboom.naver.com/board/list.nhn"',
-                '<a href="/BoomBlock3/board/"'
-            );
-            data = data.replace('<a href="/video/list.nhn"', '<a href="/BoomBlock3/video/"');
-            data = data.replace('/search/search.nhn', '/BoomBlock3/search/');
+
             data = data.replaceAll('"/css', '"https://m.bboom.naver.com/css');
             $('#temp').html(data);
-            oPostList.__getMoreList = function () {
+            oSearchList.__getMoreList = function () {
+                if (this._END_OF_LIST) return;
                 var a = this;
                 $.ajax({
                     //crossOrigin: true,
                     type: 'POST',
-                    url:
-                        'https://cors-anywhere.herokuapp.com/' +
-                        this.__htUserOption.sISRequestURL +
-                        '&length=50',
+                    url: 'https://cors-anywhere.herokuapp.com/' + this.__htUserOption.sISRequestURL,
                     data: this.__params,
                     context: a,
                     success: function (b) {
@@ -98,29 +104,34 @@
                             '/im/pf_default.png',
                             'https://m.bboom.naver.com/im/pf_default.png'
                         );
+                        b = b.replaceAll('/best/get.nhn', '/BoomBlock3/get/');
                         b = b.replaceAll('/board/get.nhn', '/BoomBlock3/get/');
-                        b = b.replace('/search/search.nhn', '/BoomBlock3/search/');
-                        if (b.trim().length > 0)
-                            try {
-                                a.__$content.append(b), this.__visible.refresh();
-                                addBtns();
-                            } catch (c) {
-                                console.log(c);
-                            } finally {
-                                this.__initSocialPlugin(), lcs_do();
+                        b = b.replaceAll('/video/get.nhn', '/BoomBlock3/get/');
+                        try {
+                            b = $.trim(b);
+                            if (b == null || b == '') this.__noSearchData();
+                            else {
+                                var c = $(b).size();
+                                c < this.__params.length && this.__endOfSearchList(),
+                                    a.__$content.append(b);
                             }
-                        $('._load_timing_next').hide();
+                            this.__visible.refresh();
+                        } catch (d) {
+                            console.log(d);
+                        } finally {
+                            this.__initSocialPlugin(), lcs_do();
+                        }
+                        addBtns();
                     },
                     error: function (a) {
                         console.log('err = ' + a);
                     },
                 });
             };
-            oPostList.__postLike = function (a) {
+            oSearchList.__postLike = function (a) {
                 $('input[name=boardNo]').val(a.attr('data-board-no'));
                 $('input[name=postNo]').val(a.attr('data-post-no'));
-                document.fileSend.submit();
-                //$("#ifr").prop('src','https://m.bboom.naver.com/post/like.json');
+                document.fileSend.submit(); //$("#ifr").prop('src','https://m.bboom.naver.com/post/like.json');
                 /*
             var b = this,
                 c = a.attr("data-click-code"),
@@ -143,7 +154,7 @@
                 }
             })*/
             };
-            oPostList.__getMoreList();
+            oSearchList.__getMoreList();
         });
 
         function addUser(no, nm) {

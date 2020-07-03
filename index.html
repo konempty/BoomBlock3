@@ -1,101 +1,150 @@
 <html lang="ko">
-<meta charset="utf-8">
-<style>
-    html {
-        width: 100%;
-        height: 100%;
-    }
-
-    .lst2.card_lst .sc_thmb {
-        height: auto !important;
-    }
-
-    .blockbtn {
-        background-color: red;
-        color: #ffffff;
-        font-weight: bold;
-        border: 0;
-        padding: 0.25rem 0.5rem;
-    }
-</style>
-<script type="text/javascript" src="https://m.bboom.naver.com/js2/release/merged_lib.js"></script>
-<script type="text/javascript" src="/BoomBlock3/jquery.ajax-cross-origin.min.js"></script>
-
-<body style="margin:0px">
-    <div id="temp"></div>
-    <form name="fileSend" action="https://m.bboom.naver.com/post/like.json" method="POST" target="ifr">
-
-        <input type="hidden" name="boardNo" value="" />
-        <input type="hidden" name="postNo" value="" />
-    </form>
-    <iframe id="ifr" style="visibility: hidden;" name="ifr">
-
-    </iframe>
-</body>
-<script>
-    var addBtns = function() {
-        for (var i = 0; i < localStorage.length; i++) {
-            var key = localStorage.key(i);
-            $('a[href$=\"/profile/home.nhn?userNo='+key+'\"]').parent().parent().parent().parent().remove();
+    <meta charset="utf-8" />
+    <style>
+        html {
+            width: 100%;
+            height: 100%;
         }
-        $('.blockbtn').remove();
-        $('.sc_usr').each(function() {
-            var userno = $(this).children('a').attr('href').split('=')[1];
-            var usernm = $(this).children('a').text().trim();
-            $(this).append('<input class=\"blockbtn\" type=\"button\" value=\"차단\" onclick=\"addUser(' + userno + ',\'' + usernm + '\')\"/>');
-        });
-    };
-    String.prototype.replaceAll = function(org, dest) {
-        return this.split(org).join(dest);
-    }
-    $.ajax({
-        //crossOrigin: true,
-        url: "https://cors-anywhere.herokuapp.com/https://m.bboom.naver.com/board/list.nhn",
-    }).done(function(data) {
-        var rep = ['/js2', '/board'];
-        for (i = 0; i < rep.length; i++) {
-            data = data.replaceAll(rep[i], 'https://m.bboom.naver.com' + rep[i]);
+
+        .lst2.card_lst .sc_thmb {
+            height: auto !important;
         }
-        data = data.replace('<a href="/best/list.nhn"','<a href="/BoomBlock3/best/"');
-        data = data.replace('<a href="https://m.bboom.naver.com/board/list.nhn"','<a href="/BoomBlock3/board/"')
-        data = data.replaceAll('"/css', '"https://m.bboom.naver.com/css');
-        $("#temp").html(data);
-        oPostList.__getMoreList = function() {
-            var a = this;
-            $.ajax({
-                //crossOrigin: true,
-                type: "POST",
-                url: 'https://cors-anywhere.herokuapp.com/'+this.__htUserOption.sISRequestURL + '&length=50',
-                data: this.__params,
-                context: a,
-                success: function(b) {
-                    b = b.replaceAll('/im/pf_default.png', 'https://m.bboom.naver.com/im/pf_default.png');
-                    b = b.replaceAll('/board/get.nhn', '/BoomBlock3/get/');
-                    if (b.trim().length > 0)
-                        try {
-                            a.__$content.append(b),
-                                this.__visible.refresh()
-                            addBtns();
-                        } catch (c) {
-                            console.log(c)
-                        } finally {
-                            this.__initSocialPlugin(),
-                                lcs_do()
-                        }
-                    $("._load_timing_next").hide()
-                },
-                error: function(a) {
-                    console.log("err = " + a)
-                }
+
+        .blockbtn {
+            background-color: red;
+            color: #ffffff;
+            font-weight: bold;
+            border: 0;
+            padding: 0.25rem 0.5rem;
+        }
+    </style>
+    <script
+        type="text/javascript"
+        src="https://m.bboom.naver.com/js2/release/merged_lib.js"
+    ></script>
+    <script type="text/javascript" src="/BoomBlock3/jquery.ajax-cross-origin.min.js"></script>
+
+    <body style="margin: 0px;">
+        <div id="temp"></div>
+        <form
+            name="fileSend"
+            action="https://m.bboom.naver.com/post/like.json"
+            method="POST"
+            target="ifr"
+        >
+            <input type="hidden" name="boardNo" value="" />
+            <input type="hidden" name="postNo" value="" />
+        </form>
+        <iframe id="ifr" style="visibility: hidden;" name="ifr"> </iframe>
+    </body>
+    <script>
+        //var tmp1=window.open("", "formInfo", "height=500, width=900, menubar=no, scrollbars=yes, resizable=no, toolbar=no, status=no, left=50, top=50");
+        /*$.ajaxPrefilter(function(options) {
+            options.url = "http://mydomain.net/proxy/" + encodeURIComponent(options.url);
+            options.crossDomain = false;
+        }
+    });*/
+        var addBtns = function () {
+            for (var i = 0; i < localStorage.length; i++) {
+                var key = localStorage.key(i);
+                $('a[href$="/profile/home.nhn?userNo=' + key + '"]')
+                    .parent()
+                    .parent()
+                    .parent()
+                    .parent()
+                    .remove();
+            }
+            $('.blockbtn').remove();
+            $('.sc_usr').each(function () {
+                var userno = $(this).children('a').attr('href').split('=')[1];
+                var usernm = $(this).children('a').text().trim();
+                $(this).append(
+                    '<input class="blockbtn" type="button" value="차단" onclick="addUser(' +
+                        userno +
+                        ",'" +
+                        usernm +
+                        '\')"/>'
+                );
             });
+        };
+        String.prototype.replaceAll = function (org, dest) {
+            return this.split(org).join(dest);
+        };
+
+        function getParam(sname) {
+            var params = location.search.substr(location.search.indexOf('?') + 1);
+            var sval = '';
+            params = params.split('&');
+            for (var i = 0; i < params.length; i++) {
+                temp = params[i].split('=');
+                if ([temp[0]] == sname) {
+                    sval = temp[1];
+                }
+            }
+            return sval;
         }
-        oPostList.__postLike = function(a) {
-            
-            $("input[name=boardNo]").val(a.attr("data-board-no"));
-            $("input[name=postNo]").val(a.attr("data-post-no"));
-            document.fileSend.submit();
-            //$("#ifr").prop('src','https://m.bboom.naver.com/post/like.json');
-            /*
+        $.ajax({
+            //crossOrigin: true,
+            url: 'https://cors-anywhere.herokuapp.com/https://m.bboom.naver.com/best/list.nhn',
+        }).done(function (data) {
+            var rep = ['/js2', '/best'];
+            for (i = 0; i < rep.length; i++) {
+                data = data.replaceAll(rep[i], 'https://m.bboom.naver.com' + rep[i]);
+            }
+            data = data.replace('<a href="/board/list.nhn"', '<a href="/BoomBlock3/board/"');
+            data = data.replaceAll(
+                '<a href="https://m.bboom.naver.com/best/list.nhn',
+                '<a href="/BoomBlock3/best/'
+            );
+            data = data.replace('<a href="/video/list.nhn"', '<a href="/BoomBlock3/video/"');
+            data = data.replace('/search/search.nhn', '/BoomBlock3/search/');
+            data = data.replaceAll('"/css', '"https://m.bboom.naver.com/css');
+            $('#temp').html(data);
+            if (getParam('likeBandNo') == '2') {
+                $("a[href='/BoomBlock3/best/']").parent().removeClass('on');
+                $("a[href='/BoomBlock3/best/?likeBandNo=2']").parent().addClass('on');
+            }
+            oPostList.__getMoreList = function () {
+                var a = this;
+                $.ajax({
+                    //crossOrigin: true,
+                    type: 'POST',
+                    url:
+                        'https://cors-anywhere.herokuapp.com/' +
+                        this.__htUserOption.sISRequestURL.replace('likeBandNo=&', '') +
+                        '&length=30&likeBandNo=' +
+                        getParam('likeBandNo'),
+                    data: this.__params,
+                    context: a,
+                    success: function (b) {
+                        b = b.replaceAll(
+                            '/im/pf_default.png',
+                            'https://m.bboom.naver.com/im/pf_default.png'
+                        );
+                        b = b.replaceAll('/best/get.nhn', '/BoomBlock3/get/');
+                        b = b.replace('/search/search.nhn', '/BoomBlock3/search/');
+                        if (b.trim().length > 0)
+                            try {
+                                a.__$content.append(b), this.__visible.refresh();
+                                addBtns();
+                            } catch (c) {
+                                console.log(c);
+                            } finally {
+                                this.__initSocialPlugin(), lcs_do();
+                            }
+                        $('._load_timing_next').hide();
+                    },
+                    error: function (a) {
+                        console.log('err = ' + a);
+                    },
+                });
+            };
+            oPostList.__postLike = function (a) {
+                $('input[name=boardNo]').val(a.attr('data-board-no'));
+                $('input[name=postNo]').val(a.attr('data-post-no'));
+                document.fileSend.submit();
+                //$("#ifr").prop('src','https://m.bboom.naver.com/post/like.json');
+                /*
             var b = this,
                 c = a.attr("data-click-code"),
                 d = {
@@ -116,16 +165,18 @@
                         nclk(this, c, "", "")
                 }
             })*/
+            };
+            oPostList.__getMoreList();
+        });
+
+        function addUser(no, nm) {
+            localStorage.setItem(no, nm);
+            $('a[href$="/profile/home.nhn?userNo=' + no + '"]')
+                .parent()
+                .parent()
+                .parent()
+                .parent()
+                .remove();
         }
-        oPostList.__getMoreList();
-    });
-
-    function addUser(no, nm) {
-        localStorage.setItem(no, nm);
-        $('a[href$=\"/profile/home.nhn?userNo='+no+'\"]').parent().parent().parent().parent().remove();
-    }
-    
-    
-</script>
-
+    </script>
 </html>
