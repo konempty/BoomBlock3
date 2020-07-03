@@ -148,10 +148,33 @@
                     }
                 );
             };
-            oPostView.__requestCommentList(true);
-            oPostView.__createCommentInner = function (p) {
-                alert('정확함');
+            oPostView.__postLike = function (oParam) {
+                var clickCode = oParam.clickCode;
+                $(fileSend).append('<input type="hidden" name="timeStamp">');
+                fileSend.action = 'https://m.bboom.naver.com/post/like.json';
+                fileSend.boardNo.value = Number(oParam.boardNo);
+
+                fileSend.postNo.value = Number(oParam.postNo);
+                fileSend.timeStamp.value = oCC.getTime();
+                fileSend.submit();
+                $('input[name=timeStamp]').remove();
             };
+
+            oPostView.__commentLikeInner = function (oParam) {
+                var clickCode = oParam.clickCode;
+                $(fileSend).append('<input type="hidden" name="commentNo">');
+                fileSend.action = 'https://m.bboom.naver.com/post/like.json';
+                fileSend.boardNo.value = Number(oParam.boardNo);
+
+                fileSend.postNo.value = Number(oParam.postNo);
+                fileSend.commentNo.value = Number(oParam.commentNo);
+                fileSend.submit();
+                $('input[name=commentNo]').remove();
+            };
+            oPostView.__requestCommentList(true);
+            // oPostView.__createCommentInner = function (p) {
+            //     alert('정확함');
+            // };
             fileSend.action = 'https://m.bboom.naver.com/hitCount/incr.json';
             fileSend.boardNo = getParam('boardNo');
 
