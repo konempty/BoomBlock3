@@ -89,7 +89,7 @@
             }
 
             data = data.replaceAll('"/css', '"https://m.bboom.naver.com/css');
-            data = data.replace('href="/"', '/BoomBlock3/');
+            data = data.replace('href="/"', 'href="/BoomBlock3/"');
             $('#temp').html(data);
             oSearchList.__getMoreList = function () {
                 if (this._END_OF_LIST) return;

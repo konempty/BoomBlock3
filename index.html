@@ -98,6 +98,7 @@
             );
             data = data.replace('<a href="/video/list.nhn"', '<a href="/BoomBlock3/video/"');
             data = data.replace('/search/search.nhn', '/BoomBlock3/search/');
+            data = data.replace('href="/"', 'href="/BoomBlock3/"');
             data = data.replaceAll('"/css', '"https://m.bboom.naver.com/css');
             $('#temp').html(data);
             if (getParam('likeBandNo') == '2') {
