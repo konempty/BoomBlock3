@@ -98,6 +98,10 @@
             data = data.replace('href="/"', 'href="/BoomBlock3/"');
             data.replace('/search/search.nhn', '/BoomBlock3/search/');
             data = data.replaceAll('/board/get.nhn', '/BoomBlock3/get/');
+            data = data.replaceAll(
+                '"attachView.nhn',
+                '"https://m.bboom.naver.com/board/attachView.nhn'
+            );
             $('#temp').html(data);
             oPostView.__requestCommentList = function (isBest) {
                 var param = {
